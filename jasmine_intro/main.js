@@ -1,109 +1,99 @@
-/* Unit Testing - Grouping with Describe Challenge
-* 
-* Is there a more reliable way to identify our grouping name?
-*
-*/
 import User from "./user.js";
-/**
-* Test Suite 
-*/
+
 describe(`${User.name} Class`, () => {
-    let model;
+    let mockUserService;
+
     beforeEach(()=> {
-        model = new User()
+        mockUserService = {
+            lastId: null,
+            user: {},
+            getUserById: async function (id) {
+                this.lastId = id
+                return this.user;
+            }
+        };
     })
+
     describe("Default values", () => {
         it('first name defaults to empty', () => {
-        //arrange
-            const data = {firstName: null}
-            //act
-        
-            //assert
-            expect(model.firstName).toBe('')
-            })
-        
-            it('last name defaults to empty', () => {
-                
-                expect(model.lastName).toBe('')
-            })
-            it('middle name defaults to empty', () => {
-        
-                expect(model.middleName).toBe('')
-            })
-         })
+            const model = new User({ firstName: null });
+            expect(model.firstName).toBe('');
+        });
+
+        it('last name defaults to empty', () => {
+            const model = new User({ lastName: null });
+            expect(model.lastName).toBe('');
+        });
+
+        it('middle name defaults to empty', () => {
+            const model = new User({ middleName: null });
+            expect(model.middleName).toBe('');
+        });
+    })
 
     describe('Full name', () => {
+        let model;
+
         beforeEach(() =>{
-            model = new User({
-                firstName: "Charle",
-                lastName: "Gabriel"
-            })
-            
+            model = new User({ firstName: "Charle", lastName: "Gabriel" });
         })
-        it("middle initial when middle name is defined with first name and last name", () => {
 
-            model.middleName = "June"
-            const result = model.fullName
-            expect(result).toBe(`${model.firstName} ${model.middleName[0]}. ${model.lastName}`)
+        it("middle initial when middle name is defined", () => {
+            model.middleName = "June";
+            expect(model.fullName).toBe(`${model.firstName} ${model.middleName[0]}. ${model.lastName}`);
+        });
 
-        })
         it('when no middle name return just first and last', ()=> {
-            model.middleName = ''
-            const result = model.fullName
-            expect(result).toBe(`${model.firstName} ${model.lastName}`)
-        })
+            model.middleName = '';
+            expect(model.fullName).toBe(`${model.firstName} ${model.lastName}`);
+        });
     })
 
     describe("Say My Name", () => {
-        it("alert the full name of user", () => {
-            //arrange
-            model.firstName = "Danielle"
-            model.lastName = "Charles"
-            spyOn(window, "alert")
-            
-            //act
-            model.sayMyName()
+        it("alerts the full name of user", () => {
+            const model = new User({ firstName: "Danielle", lastName: "Charles" });
+            spyOn(window, "alert");
 
-            //assert
-            expect(window.alert).toHaveBeenCalledWith("Danielle Charles")
+            model.sayMyName();
+
+            expect(window.alert).toHaveBeenCalledWith("Danielle Charles");
+        });
+    })
+
+    describe("get code name", () => {
+        let model;
+
+        beforeEach(() => {
+            model = new User();
+        });
+
+        it('is a coding god when confirmed', () => {
+            spyOn(window, "confirm").and.returnValue(true);
+            const result = model.getCodeName();
+            expect(result).toBe("Testing God!");
+        });
+
+        it('is a coding scrub when not confirmed', () => {
+            spyOn(window, "confirm").and.returnValue(false);
+            const result = model.getCodeName();
+            expect(result).toBe(`Scrub skippinbg tests in his best friend's ride`);
+        });
+
+        it('asks a user if they are a testing god', () => {
+            spyOn(window, "confirm").and.returnValue(true);
+            model.getCodeName();
+            expect(window.confirm).toHaveBeenCalledWith('Are you a testing god?');
+        });
+    })
+
+    describe('getMyFullUserData', () => {
+        it('gets user data by id', async () => {
+            const model = new User({ firstName: "Dylan", lastName: "Israel", id: 1 }, mockUserService);
+            mockUserService.user = new User({firstName: "Danny", middleName: "Charles", lastName: "Joseph", id: 2});
+
+            await model.getMyFullUserData();
+
+            expect(mockUserService.lastId).toBe(1);
         })
     })
-    
-    describe("get code name", () => {
-     it('is a coding god when confirmed', () => {
-           //arrange
-
-        spyOn(window, "confirm").and.returnValue(true)
-
-        //act
-        const result = model.getCodeName()
-
-        expect(result).toBe("Testing God!")
-     })
-
-     it('is a coding scrub when not confirmed', () => {
-           //arrange
-
-        spyOn(window, "confirm").and.returnValue(false)
-
-        //act
-        const result = model.getCodeName()
-
-        expect(result).toBe(`Scrub skippinbg tests in his best friend's ride`)
-     })
-
-     it('asks a user if they are a testing god', () => {
-           //arrange
-
-        spyOn(window, "confirm").and.returnValue(true)
-
-        //act
-        const result = model.getCodeName()
-
-        expect(window.confirm).toHaveBeenCalledWith('Are you a testing god?')
-     })
-    })
 })
-
-
-
