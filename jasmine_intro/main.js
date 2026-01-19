@@ -53,7 +53,56 @@ describe(`${User.name} Class`, () => {
             expect(result).toBe(`${model.firstName} ${model.lastName}`)
         })
     })
+
+    describe("Say My Name", () => {
+        it("alert the full name of user", () => {
+            //arrange
+            model.firstName = "Danielle"
+            model.lastName = "Charles"
+            spyOn(window, "alert")
+            
+            //act
+            model.sayMyName()
+
+            //assert
+            expect(window.alert).toHaveBeenCalledWith("Danielle Charles")
+        })
+    })
     
+    describe("get code name", () => {
+     it('is a coding god when confirmed', () => {
+           //arrange
+
+        spyOn(window, "confirm").and.returnValue(true)
+
+        //act
+        const result = model.getCodeName()
+
+        expect(result).toBe("Testing God!")
+     })
+
+     it('is a coding scrub when not confirmed', () => {
+           //arrange
+
+        spyOn(window, "confirm").and.returnValue(false)
+
+        //act
+        const result = model.getCodeName()
+
+        expect(result).toBe(`Scrub skippinbg tests in his best friend's ride`)
+     })
+
+     it('asks a user if they are a testing god', () => {
+           //arrange
+
+        spyOn(window, "confirm").and.returnValue(true)
+
+        //act
+        const result = model.getCodeName()
+
+        expect(window.confirm).toHaveBeenCalledWith('Are you a testing god?')
+     })
+    })
 })
 
 

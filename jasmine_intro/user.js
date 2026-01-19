@@ -15,6 +15,19 @@ class User {
         }
         return `${this.firstName} ${this.lastName}`
     }
+
+    sayMyName() {
+        window.alert(this.fullName)
+    }
+
+    getCodeName() {
+        const isATestinggod = confirm('Are you a testing god?')
+        if(isATestinggod) {
+            return 'Testing God!'
+        } else {
+            return `Scrub skippinbg tests in his best friend's ride`
+        }
+    }
 }
 
 export default User
