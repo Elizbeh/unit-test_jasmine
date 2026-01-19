@@ -86,14 +86,26 @@ describe(`${User.name} Class`, () => {
         });
     })
 
-    describe('getMyFullUserData', () => {
-        it('gets user data by id', async () => {
-            const model = new User({ firstName: "Dylan", lastName: "Israel", id: 1 }, mockUserService);
-            mockUserService.user = new User({firstName: "Danny", middleName: "Charles", lastName: "Joseph", id: 2});
+   describe('getMyFullUserData', () => {
+    it('passes id to get user', async () => {
+        const model = new User({ firstName: "Dylan", lastName: "Israel", id: 1 }, mockUserService);
+        
+        await model.getMyFullUserData();
 
-            await model.getMyFullUserData();
+        expect(mockUserService.lastId).toBe(1);
+    });
 
-            expect(mockUserService.lastId).toBe(1);
-        })
-    })
+    it('returns full user data', async () => {
+        const model = new User({ firstName: "Dolan", lastName: "Israel", id: 2 }, mockUserService);
+
+        // Set what the mock service should return
+        mockUserService.user = { id: 2, firstName: "Dolan", lastName: "Israel" };
+
+        const result = await model.getMyFullUserData();
+
+        expect(result.id).toBe(2);
+        expect(result.firstName).toBe("Dolan");
+    });
+});
+
 })
