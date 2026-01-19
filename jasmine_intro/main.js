@@ -1,6 +1,9 @@
 import User from "./user.js";
 
 describe(`${User.name} Class`, () => {
+    it('exist', () => {
+        expect(User).toBeDefined()
+    })
     let mockUserService;
 
     beforeEach(()=> {
@@ -106,6 +109,37 @@ describe(`${User.name} Class`, () => {
         expect(result.id).toBe(2);
         expect(result.firstName).toBe("Dolan");
     });
-});
+    });
 
+    describe('additional matchers examples', () => {
+        // toBeDefined(), toEqual()
+        it('gets full name pieces', () => {
+           // arrange
+           const firstName = 'Dylan';
+           const middleName = 'Christopher';
+           const lastName = 'Israel';
+           
+           // act
+           const model = new User({firstName, middleName, lastName});
+           
+           // assert 
+            expect(model.fullNamePieces).toEqual([firstName, middleName, lastName]);
+        });
+    });
+    
+    describe('additional matchers testing area', () => {
+        it('has my first name', () => {
+            // arrange
+            const firstName = 'Dylan';
+            const lastName = 'Israel';
+            
+            // act
+            const model = new User({firstName, lastName});
+            
+            // assert
+            expect(model.fullName).toMatch(/Dylan/);
+        });
+
+    
+    })
 })

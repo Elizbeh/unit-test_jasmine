@@ -22,6 +22,10 @@ class User {
         return `${this.firstName} ${this.lastName}`
     }
 
+    get fullNamePieces() {
+        return [this.firstName, this.middleName, this.lastName];
+    }
+
     async getMyFullUserData() {
         return this.userService.getUserById(this.id)
     }
@@ -38,6 +42,7 @@ class User {
             return `Scrub skippinbg tests in his best friend's ride`
         }
     }
+
 }
 
 export default User
